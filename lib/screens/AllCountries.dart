@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:country_house/screens/Country.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +40,7 @@ class _AllCountriesState extends State<AllCountries> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                Country(snapshot.data[index]['name']),
+                            builder: (context) => Country(snapshot.data[index]),
                           ),
                         );
                       },
