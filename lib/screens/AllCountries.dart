@@ -8,27 +8,39 @@ class AllCountries extends StatefulWidget {
 }
 
 class _AllCountriesState extends State<AllCountries> {
-  Future<List> countries;
+  List countries = [];
+  List filteredCountries = [];
   bool isSearching = false;
-  Future<List> getCountries() async {
+  getCountries() async {
     var response = await Dio().get('https://restcountries.eu/rest/v2/all');
     return response.data;
   }
 
   @override
   void initState() {
-    countries = getCountries();
+    getCountries().then((data) {
+      setState(() {
+        countries = filteredCountries = data;
+      });
+    });
     super.initState();
   }
 
   void _filterCountries(value) {
-    print(value);
+    setState(() {
+      filteredCountries = countries
+          .where(
+            (country) =>
+                country['name'].toLowerCase().contains(value.toLowerCase()),
+          )
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(countries);
-    getCountries();
+    //print(countries);
+    //getCountries();
     return Scaffold(
       appBar: AppBar(
         title: !isSearching
@@ -53,6 +65,7 @@ class _AllCountriesState extends State<AllCountries> {
                   onPressed: () {
                     setState(() {
                       this.isSearching = false;
+                      filteredCountries = countries;
                     });
                   },
                 )
@@ -68,17 +81,16 @@ class _AllCountriesState extends State<AllCountries> {
       ),
       body: Container(
         padding: EdgeInsets.all(10.0),
-        child: FutureBuilder<List>(
-          future: countries,
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
+        child: filteredCountries.length > 0
+            ? ListView.builder(
+                itemCount: filteredCountries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Country(snapshot.data[index]),
+                          builder: (context) =>
+                              Country(filteredCountries[index]),
                         ),
                       );
                     },
@@ -88,18 +100,17 @@ class _AllCountriesState extends State<AllCountries> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 8.0),
                         child: Text(
-                          snapshot.data[index]['name'],
+                          filteredCountries[index]['name'],
                           style: TextStyle(fontSize: 18.0),
                         ),
                       ),
                     ),
                   );
                 },
-              );
-            }
-            return null;
-          },
-        ),
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
     );
   }
