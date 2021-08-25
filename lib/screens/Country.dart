@@ -1,4 +1,4 @@
-import 'package:country_house/screens/countryMap.dart';
+//import 'package:country_house/screens/countryMap.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -72,7 +72,7 @@ class Country extends StatelessWidget {
               ),
               back: CountryDetailCard(
                 title: country['callingCodes'][0],
-                color: Colors.deepPurple,
+                color: Colors.brown,
               ),
             ),
             FlipCard(
@@ -82,7 +82,7 @@ class Country extends StatelessWidget {
               ),
               back: CountryDetailCard(
                 title: country['region'],
-                color: Colors.deepPurple,
+                color: Colors.red,
               ),
             ),
             FlipCard(
@@ -92,7 +92,7 @@ class Country extends StatelessWidget {
               ),
               back: CountryDetailCard(
                 title: country['timezones'][0],
-                color: Colors.deepPurple,
+                color: Colors.pink,
               ),
             ),
             FlipCard(
@@ -102,19 +102,10 @@ class Country extends StatelessWidget {
               ),
               back: CountryDetailCard(
                 title: country['currencies'][0]['symbol'],
-                color: Colors.deepPurple,
+                color: Colors.green,
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => CountryMap(),
-                  ),
-                );
-              },
-              child: CountryCard(title: 'Show on Map'),
-            ),
+           
           ],
         ),
       ),
